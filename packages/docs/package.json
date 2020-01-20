@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "description": "Documentation for all things cardstax.",
   "author": "jajav33 <to.jajav33@gmail.com>",
-  "homepage": "https://github.com/to-jajav33/cardstax/tree/master/packages/docs#readme",
+  "homepage": "https://github.com/to-jajav33/sherrifofmoneyham/tree/master/packages/docs#readme",
   "license": "MIT",
   "main": "dist/index.html",
   "directories": {
@@ -18,7 +18,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/to-jajav33/cardstax.git"
+    "url": "git+https://github.com/to-jajav33/sherrifofmoneyham.git"
   },
   "scripts": {
     "test": "echo \"FYI: no test to run\" && exit 0",
@@ -26,7 +26,7 @@
     "docs:build": "npx vuepress build src"
   },
   "bugs": {
-    "url": "https://github.com/to-jajav33/cardstax/issues"
+    "url": "https://github.com/to-jajav33/sherrifofmoneyham/issues"
   },
   "devDependencies": {
     "vuepress": "^1.0.3"

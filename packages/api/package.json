@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "description": "API for cardstax app to connect to.",
   "author": "jajav33 <to.jajav33@gmail.com>",
-  "homepage": "https://github.com/to-jajav33/cardstax/tree/master/packages/api#readme",
+  "homepage": "https://github.com/to-jajav33/sherrifofmoneyham/tree/master/packages/api#readme",
   "license": "UNLICENSED",
   "main": "dist/api.js",
   "directories": {
@@ -18,7 +18,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/to-jajav33/cardstax.git"
+    "url": "git+https://github.com/to-jajav33/sherrifofmoneyham.git"
   },
   "scripts": {
     "build": "npm run clean && npm run compile",
@@ -37,7 +37,7 @@
     "test:single": "npx nyc --reporter=html -x *.test.js npm run test:mocha"
   },
   "bugs": {
-    "url": "https://github.com/to-jajav33/cardstax/issues"
+    "url": "https://github.com/to-jajav33/sherrifofmoneyham/issues"
   },
   "dependencies": {
     "body-parser": "^1.18.3",
