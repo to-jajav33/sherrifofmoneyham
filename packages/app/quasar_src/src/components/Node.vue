@@ -164,15 +164,15 @@ export default {
       }
     },
     updatePlannedValue() {
-      if (this.myNode.parent) {
-        if (this.myNode.valueType === VALUE_TYPES.FIXED) {
-          this.myNode.remainingPlannedValue = Number(
-            this.myNode.enteredPlannedValue
-          );
-        } else {
-          this.myNode.remainingPlannedValue = 0;
-        }
+      if (this.myNode.valueType === VALUE_TYPES.FIXED) {
+        this.myNode.remainingPlannedValue = Number(
+          this.myNode.enteredPlannedValue
+        );
+      } else {
+        this.myNode.remainingPlannedValue = 0;
+      }
 
+      if (this.myNode.parent) {
         for (let child of this.myNode.parent.children) {
           let startingVal = this.myNode.parent.plannedValue;
           startingVal -= child.remainingPlannedValue;
