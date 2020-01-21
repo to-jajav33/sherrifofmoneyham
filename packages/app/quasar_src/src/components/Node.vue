@@ -16,7 +16,7 @@
         dense
         filled
         label="Value"
-        v-model="myNode.enteredPlannedValue"
+        v-model="enteredPlannedValue"
       ></q-input>
 
       <!-- value type -->
@@ -27,8 +27,32 @@
         filled
         label="Value Type"
         :options="Object.keys(VALUE_TYPES)"
-        v-model="myNode.valueType"
+        v-model="valueType"
       ></q-select>
+    </div>
+
+    <div class="row col">
+      <q-list class="col">
+        <q-item class="col">
+          <q-item-section class="col">
+            <q-item-label caption>
+              Planned Value
+            </q-item-label>
+            <q-item-label>
+              {{ myNode.plannedValue }}
+            </q-item-label>
+          </q-item-section>
+
+          <q-item-section class="col">
+            <q-item-label caption>
+              Actual Value
+            </q-item-label>
+            <q-item-label>
+              {{ actualValue }}
+            </q-item-label>
+          </q-item-section>
+        </q-item>
+      </q-list>
     </div>
 
     <div class="row">
@@ -48,6 +72,7 @@
         round
       ></q-btn>
     </div>
+
     <node
       v-for="(childNode, childIndex) in myNode.children"
       :key="`childNode_${childNode.uid}`"
@@ -69,8 +94,40 @@ export const VALUE_TYPES = {
 export default {
   name: "node",
   computed: {
+    actualValue() {
+      return this.myNode.actualValue || 0;
+    },
     isRoot() {
       return this.myNode && !this.myNode.parent;
+    },
+    enteredPlannedValue: {
+      get: function() {
+        return this.myNode.enteredPlannedValue;
+      },
+      set: function(val) {
+        this.myNode.enteredPlannedValue = val;
+        this.plannedValue = val;
+      }
+    },
+    plannedValue: {
+      get: function() {
+        return this.myNode.plannedValue;
+      },
+      set: function() {
+        this.updatePlannedValue();
+      }
+    },
+    valueType: {
+      get: function() {
+        return this.myNode.valueType;
+      },
+      set: function(val) {
+        if (this.myNode.valueType !== val) {
+          this.myNode.valueType = val;
+
+          this.updatePlannedValue();
+        }
+      }
     }
   },
   data() {
@@ -86,14 +143,28 @@ export default {
         valueType: VALUE_TYPES.FIXED,
         children: [],
         enteredPlannedValue: 0,
-        planned: 0,
-        actual: 0
+        plannedValue: 0,
+        actualValue: 0
       });
     },
     removeSelf() {
       if (this.myNode.parent) {
         this.myNode.parent.children.splice(this.myIndex, 1);
       }
+    },
+    updatePlannedValue() {
+      let plannedValue = 0;
+      if (this.myNode.valueType === VALUE_TYPES.PERCENT) {
+        plannedValue =
+          (Number(this.myNode.enteredPlannedValue) / 100) *
+          this.myNode.parent.plannedValue;
+      } else {
+        plannedValue = Number(this.myNode.enteredPlannedValue);
+      }
+
+      this.myNode.plannedValue = plannedValue;
+
+      this.$forceUpdate();
     }
   },
   created() {
