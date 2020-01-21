@@ -98,12 +98,6 @@ export default {
     actualValue() {
       return this.myNode.actualValue || 0;
     },
-    parentRemainingPlannedValue() {
-      return this.myNode.parent ? this.myNode.parent.remainingPlannedValue : 0;
-    },
-    isRoot() {
-      return this.myNode && !this.myNode.parent;
-    },
     enteredPlannedValue: {
       get: function() {
         return this.myNode.enteredPlannedValue;
@@ -112,6 +106,12 @@ export default {
         this.myNode.enteredPlannedValue = val;
         this.plannedValue = val;
       }
+    },
+    isRoot() {
+      return this.myNode && !this.myNode.parent;
+    },
+    parentRemainingPlannedValue() {
+      return this.myNode.parent ? this.myNode.parent.remainingPlannedValue : 0;
     },
     plannedValue: {
       get: function() {
@@ -132,6 +132,12 @@ export default {
           this.updatePlannedValue();
         }
       }
+    }
+  },
+  created() {
+    if (this.isRoot) {
+      this.myNode.valueType = VALUE_TYPES.FIXED;
+      this.myNode.uid = this.myNode.uid || uid();
     }
   },
   data() {
@@ -191,12 +197,6 @@ export default {
       this.myNode.plannedValue = plannedValue;
 
       this.$forceUpdate();
-    }
-  },
-  created() {
-    if (this.isRoot) {
-      this.myNode.valueType = VALUE_TYPES.FIXED;
-      this.myNode.uid = this.myNode.uid || uid();
     }
   },
   props: ["myNode", "myIndex"],
