@@ -29,6 +29,6 @@
     "url": "https://github.com/to-jajav33/sherrifofmoneyham/issues"
   },
   "devDependencies": {
-    "vuepress": "^1.0.3"
+    "vuepress": "^1.2.0"
   }
 }
