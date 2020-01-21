@@ -12,6 +12,7 @@
     <div class="row col">
       <!-- entered value -->
       <q-input
+        autocomplete="off"
         class="col"
         dense
         filled
@@ -97,6 +98,9 @@ export default {
     actualValue() {
       return this.myNode.actualValue || 0;
     },
+    parentRemainingPlannedValue() {
+      return this.myNode.parent ? this.myNode.parent.remainingPlannedValue : 0;
+    },
     isRoot() {
       return this.myNode && !this.myNode.parent;
     },
@@ -144,6 +148,7 @@ export default {
         children: [],
         enteredPlannedValue: 0,
         plannedValue: 0,
+        remainingPlannedValue: 0,
         actualValue: 0
       });
     },
@@ -153,11 +158,32 @@ export default {
       }
     },
     updatePlannedValue() {
+      if (this.myNode.parent) {
+        if (this.myNode.valueType === VALUE_TYPES.FIXED) {
+          this.myNode.remainingPlannedValue = Number(
+            this.myNode.enteredPlannedValue
+          );
+        } else {
+          this.myNode.remainingPlannedValue = 0;
+        }
+
+        for (let child of this.myNode.parent.children) {
+          let startingVal = this.myNode.parent.plannedValue;
+          startingVal -= child.remainingPlannedValue;
+
+          this.myNode.parent.remainingPlannedValue = startingVal;
+        }
+      }
+
       let plannedValue = 0;
+      let adujustedParentValue = this.myNode.parent
+        ? this.myNode.parent.remainingPlannedValue
+        : 0;
+
       if (this.myNode.valueType === VALUE_TYPES.PERCENT) {
         plannedValue =
           (Number(this.myNode.enteredPlannedValue) / 100) *
-          this.myNode.parent.plannedValue;
+          adujustedParentValue;
       } else {
         plannedValue = Number(this.myNode.enteredPlannedValue);
       }
@@ -173,6 +199,13 @@ export default {
       this.myNode.uid = this.myNode.uid || uid();
     }
   },
-  props: ["myNode", "myIndex"]
+  props: ["myNode", "myIndex"],
+  watch: {
+    parentRemainingPlannedValue(val) {
+      if (this.remainingPlannedValue !== val) {
+        this.updatePlannedValue();
+      }
+    }
+  }
 };
 </script>
