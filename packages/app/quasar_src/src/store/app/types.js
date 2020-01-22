@@ -3,5 +3,6 @@ export default {
   removeNode: "removeNode",
   setEnteredPlannedValue: "setEnteredPlannedValue",
   setTagName: "setTagName",
+  setValueType: "setValueType",
   updatePlannedValue: "updatePlannedValue"
 };

@@ -51,6 +51,12 @@ export default {
     let node = paramState.nodes[params.uid];
     node.tagName = params.value;
   },
+  [types.setValueType]: function(paramState, paramParams) {
+    let { params } = paramParams;
+    let node = paramState.nodes[params.uid];
+
+    node.valueType = params.value;
+  },
   [types.updatePlannedValue]: function(paramState, paramParams) {
     const { params } = paramParams;
     const myNode = paramState.nodes[params.uid];
@@ -62,7 +68,8 @@ export default {
     }
 
     if (paramState.nodes[myNode.parent]) {
-      for (let child of paramState.nodes[myNode.parent].children) {
+      for (let childID of paramState.nodes[myNode.parent].children) {
+        let child = paramState.nodes[childID];
         let startingVal = paramState.nodes[myNode.parent].plannedValue;
         startingVal -= child.remainingPlannedValue;
 

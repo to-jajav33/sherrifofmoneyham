@@ -37,6 +37,15 @@ export default {
 
     return out.return;
   },
+  [types.setValueType]: async function(paramContext, params) {
+    let out = {
+      params,
+      return: null
+    };
+    paramContext.commit(types.setValueType, out);
+
+    return out.return;
+  },
   [types.updatePlannedValue]: async function(paramContext, params) {
     let out = {
       params,

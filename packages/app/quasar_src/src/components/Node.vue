@@ -135,7 +135,7 @@ export default {
       },
       set: function(val) {
         if (this.myNode.valueType !== val) {
-          this.myNode.valueType = val;
+          this.setValueType({ uid: this.myNode.uid, value: val });
 
           this.__updatePlannedValue();
         }
@@ -157,6 +157,7 @@ export default {
       types.removeNode,
       types.setEnteredPlannedValue,
       types.setTagName,
+      types.setValueType,
       types.updatePlannedValue
     ]),
     async __addChild() {
