@@ -2,31 +2,28 @@
   <q-page class="flex flex-center">
     <div class="column">
       <!-- <img alt="Quasar logo" src="~assets/quasar-logo-full.svg" /> -->
-      <node :myNode="root" :myIndex="0"></node>
+      <node :myNode="__root" :myIndex="0"></node>
     </div>
   </q-page>
 </template>
 
 <script>
-import { default as Node, VALUE_TYPES } from "../components/Node";
+import { default as Node } from "../components/Node";
+import { mapGetters } from "vuex";
 
 export default {
   components: {
     Node
   },
   name: "PageIndex",
+  computed: {
+    ...mapGetters("app", ["nodes"]),
+    __root() {
+      return this.nodes.root;
+    }
+  },
   data() {
-    return {
-      root: {
-        parent: null,
-        enteredPlannedValue: 2000,
-        plannedValue: 2000,
-        remainingPlannedValue: 2000,
-        actualValue: 0,
-        children: [],
-        valueType: VALUE_TYPES.FIXED // fixed or percent
-      }
-    };
+    return {};
   }
 };
 </script>

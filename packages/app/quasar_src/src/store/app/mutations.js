@@ -26,6 +26,17 @@ export default {
 
     return newNode;
   },
+  [types.removeNode]: function(paramState, paramParams) {
+    let { params } = paramParams;
+    let node = paramState.nodes[params.uid];
+
+    if (paramState.nodes[node.parent]) {
+      let index = paramState.nodes[node.parent].children.indexOf(params.uid);
+      let child = paramState.nodes[node.parent].children[index];
+      paramState.nodes[node.parent].children.splice(index, 1);
+      paramState.nodes[child.uid] = null;
+    }
+  },
   [types.updatePlannedValue]: function(paramState, paramParams) {
     const { params } = paramParams;
     const myNode = paramState[params.node];
