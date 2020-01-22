@@ -21,6 +21,22 @@ export default {
 
     return out.return;
   },
+  [types.setEnteredPlannedValue]: async function(paramContext, params) {
+    let out = {
+      params,
+      return: null
+    };
+    paramContext.commit(types.setEnteredPlannedValue, out);
+  },
+  [types.setTagName]: async function(paramContext, params) {
+    let out = {
+      params,
+      return: null
+    };
+    paramContext.commit(types.setTagName, out);
+
+    return out.return;
+  },
   [types.updatePlannedValue]: async function(paramContext, params) {
     let out = {
       params,

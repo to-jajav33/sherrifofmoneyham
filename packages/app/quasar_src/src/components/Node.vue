@@ -6,7 +6,7 @@
       v-if="!isRoot"
       filled
       label="Tag Name"
-      v-model="myNode.tagName"
+      v-model="__tagName"
     ></q-input>
 
     <div class="row col">
@@ -101,7 +101,7 @@ export default {
         return this.myNode.enteredPlannedValue;
       },
       set: function(val) {
-        this.myNode.enteredPlannedValue = val;
+        this.setEnteredPlannedValue({ uid: this.myNode.uid, value: val });
         this.plannedValue = val;
       }
     },
@@ -119,6 +119,14 @@ export default {
       },
       set: function() {
         this.__updatePlannedValue();
+      }
+    },
+    __tagName: {
+      get: function() {
+        return this.myNode.tagName;
+      },
+      set: function(value) {
+        this.setTagName({ uid: this.myNode.uid, value });
       }
     },
     valueType: {
@@ -144,7 +152,13 @@ export default {
     return {};
   },
   methods: {
-    ...mapActions("app", [types.createNewChild, types.removeNode]),
+    ...mapActions("app", [
+      types.createNewChild,
+      types.removeNode,
+      types.setEnteredPlannedValue,
+      types.setTagName,
+      types.updatePlannedValue
+    ]),
     async __addChild() {
       let newChild = await this.createNewChild({ parent: this.myNode.uid });
 
@@ -154,7 +168,7 @@ export default {
       this.removeNode({ uid: this.myNode.uid });
     },
     __updatePlannedValue() {
-      this.updatePlannedValue();
+      this.updatePlannedValue({ uid: this.myNode.uid });
 
       this.$forceUpdate();
     }

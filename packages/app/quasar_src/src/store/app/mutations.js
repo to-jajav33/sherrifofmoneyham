@@ -1,6 +1,7 @@
 import { uid } from "quasar";
 import { VALUE_TYPES } from "./state";
 import types from "./types";
+import Vue from "vue";
 
 export function someMutation(/* state */) {}
 
@@ -16,8 +17,11 @@ export default {
       enteredPlannedValue: 0,
       plannedValue: 0,
       remainingPlannedValue: 0,
-      actualValue: 0
+      actualValue: 0,
+      tagName: ""
     };
+
+    Vue.set(paramState.nodes, newNode.uid, newNode);
 
     paramState.nodes[parent].children.push(newNode.uid);
     paramState.nodes[newNode.uid] = newNode;
@@ -37,9 +41,19 @@ export default {
       paramState.nodes[child.uid] = null;
     }
   },
+  [types.setEnteredPlannedValue]: function(paramState, paramParams) {
+    let { params } = paramParams;
+    let node = paramState.nodes[params.uid];
+    node.enteredPlannedValue = params.value;
+  },
+  [types.setTagName]: function(paramState, paramParams) {
+    let { params } = paramParams;
+    let node = paramState.nodes[params.uid];
+    node.tagName = params.value;
+  },
   [types.updatePlannedValue]: function(paramState, paramParams) {
     const { params } = paramParams;
-    const myNode = paramState[params.node];
+    const myNode = paramState.nodes[params.uid];
 
     if (myNode.valueType === VALUE_TYPES.FIXED) {
       myNode.remainingPlannedValue = Number(myNode.enteredPlannedValue);
