@@ -17,7 +17,6 @@ export default function() {
         valueType: VALUE_TYPES.FIXED // fixed or percent
       }
     },
-    tags: [],
-    transactions: []
+    transactions: {}
   };
 }

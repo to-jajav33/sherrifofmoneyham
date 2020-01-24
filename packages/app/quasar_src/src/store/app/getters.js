@@ -11,15 +11,16 @@ export function nodes(paramState) {
 }
 
 export function tags(paramState) {
-  let out = [];
+  paramState.tags = [];
 
-  for (let tagNode of paramState.tags) {
+  for (let tagNodeKey of Object.keys(paramState.nodes)) {
+    let tagNode = paramState.nodes[tagNodeKey];
     if (tagNode.tagName) {
-      out.push(tagNode);
+      paramState.tags.push(tagNode);
     }
   }
 
-  return out;
+  return paramState.tags;
 }
 
 export function transactions(paramState) {

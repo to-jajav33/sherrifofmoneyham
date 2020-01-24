@@ -12,6 +12,15 @@ export default {
 
     return out.return;
   },
+  [types.createTransaction]: async function(paramContext, params) {
+    let out = {
+      params,
+      return: null
+    };
+    paramContext.commit(types.createTransaction, out);
+
+    return out.return;
+  },
   [types.removeNode]: async function(paramContext, params) {
     let out = {
       params,
@@ -43,6 +52,15 @@ export default {
       return: null
     };
     paramContext.commit(types.setValueType, out);
+
+    return out.return;
+  },
+  [types.updateActualValue]: async function(paramContext, params) {
+    let out = {
+      params,
+      return: null
+    };
+    paramContext.commit(types.updateActualValue, out);
 
     return out.return;
   },

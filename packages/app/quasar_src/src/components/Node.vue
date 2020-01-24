@@ -49,7 +49,7 @@
               Actual Value
             </q-item-label>
             <q-item-label>
-              {{ actualValue }}
+              {{ this.myNode.actualValue }}
             </q-item-label>
           </q-item-section>
         </q-item>
@@ -94,7 +94,7 @@ export default {
   computed: {
     ...mapGetters("app", ["VALUE_TYPES", "nodes"]),
     actualValue() {
-      return this.myNode.actualValue || 0;
+      return this.myNode.actualValue;
     },
     enteredPlannedValue: {
       get: function() {
@@ -161,7 +161,10 @@ export default {
       types.updatePlannedValue
     ]),
     async __addChild() {
-      let newChild = await this.createNewChild({ parent: this.myNode.uid });
+      let newChild = await this.createNewChild({
+        parent: this.myNode.uid,
+        store: this.$store
+      });
 
       return newChild;
     },
@@ -176,6 +179,9 @@ export default {
   },
   props: ["myNode", "myIndex"],
   watch: {
+    actualValue() {
+      debugger;
+    },
     parentRemainingPlannedValue(val) {
       if (this.remainingPlannedValue !== val) {
         this.__updatePlannedValue();

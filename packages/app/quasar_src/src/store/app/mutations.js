@@ -2,6 +2,7 @@ import { uid } from "quasar";
 import { VALUE_TYPES } from "./state";
 import types from "./types";
 import Vue from "vue";
+import { mapActions } from "vuex";
 
 export function someMutation(/* state */) {}
 
@@ -23,12 +24,58 @@ export default {
 
     Vue.set(paramState.nodes, newNode.uid, newNode);
 
+    // eslint-disable-next-line no-unused-vars
+    let vm = new Vue({
+      store: params.store,
+      created() {
+        this.$watch(
+          () => newNode.actualValue,
+          value => {
+            if (newNode.parent) {
+              this.updateActualValue({ uid: newNode.parent, value });
+            }
+          }
+        );
+      },
+      methods: {
+        ...mapActions("app", [types.updateActualValue])
+      }
+    });
+
     paramState.nodes[parent].children.push(newNode.uid);
-    paramState.nodes[newNode.uid] = newNode;
+    // paramState.nodes[newNode.uid] = newNode;
 
     paramParams.return = newNode;
 
     return newNode;
+  },
+  [types.createTransaction]: function(paramState, paramParams) {
+    const { params } = paramParams;
+    const { tagUID, value } = params;
+    const nodes = paramState.nodes;
+    let newTransaction;
+
+    if (nodes[tagUID]) {
+      let tagNode = nodes[tagUID];
+      newTransaction = {
+        uid: uid(),
+        tagUID,
+        value
+      };
+
+      Vue.set(paramState.transactions, newTransaction.uid, newTransaction);
+
+      paramState.transactions[newTransaction.uid] = newTransaction;
+
+      // update the actual node
+      tagNode.actualValue += Number(value);
+
+      newTransaction.tagUID = tagUID;
+      newTransaction.value = value;
+    }
+    paramParams.return = newTransaction;
+
+    return newTransaction;
   },
   [types.removeNode]: function(paramState, paramParams) {
     let { params } = paramParams;
@@ -56,6 +103,12 @@ export default {
     let node = paramState.nodes[params.uid];
 
     node.valueType = params.value;
+  },
+  [types.updateActualValue]: function(paramState, paramParams) {
+    let { params } = paramParams;
+    let node = paramState.nodes[params.uid];
+
+    node.actualValue += params.value;
   },
   [types.updatePlannedValue]: function(paramState, paramParams) {
     const { params } = paramParams;
