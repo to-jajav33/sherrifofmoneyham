@@ -83,9 +83,10 @@ export default {
 
     if (paramState.nodes[node.parent]) {
       let index = paramState.nodes[node.parent].children.indexOf(params.uid);
-      let child = paramState.nodes[node.parent].children[index];
+      let childUID = paramState.nodes[node.parent].children[index];
       paramState.nodes[node.parent].children.splice(index, 1);
-      paramState.nodes[child.uid] = null;
+      paramState.nodes[childUID] = null;
+      Vue.delete(paramState.nodes, childUID);
     }
   },
   [types.setEnteredPlannedValue]: function(paramState, paramParams) {
