@@ -4,7 +4,7 @@ import types from "./types";
 import Vue from "vue";
 import { mapActions } from "vuex";
 
-export function recursiveChildren(paramState, inheritingUID, nodeUID) {
+export function recursiveRemoveNode(paramState, inheritingUID, nodeUID) {
   let node = paramState.nodes[nodeUID];
   let index = paramState.nodes[node.parent].children.indexOf(nodeUID);
   let childUID = paramState.nodes[node.parent].children[index];
@@ -25,7 +25,7 @@ export function recursiveChildren(paramState, inheritingUID, nodeUID) {
   }
 
   for (let childKey in node.children) {
-    recursiveChildren(paramState, inheritingUID, childKey);
+    recursiveRemoveNode(paramState, inheritingUID, childKey);
   }
 
   child = null;
@@ -60,9 +60,12 @@ export default {
       created() {
         this.$watch(
           () => newNode.actualValue,
-          value => {
+          (newValue, oldValue) => {
             if (newNode.parent) {
-              this.updateActualValue({ uid: newNode.parent, value });
+              this.updateActualValue({
+                uid: newNode.parent,
+                value: newValue - oldValue
+              });
             }
           }
         );
@@ -120,7 +123,8 @@ export default {
     let inheritingUID = node.parent;
 
     if (paramState.nodes[node.parent]) {
-      recursiveChildren(paramState, inheritingUID, params.uid);
+      recursiveRemoveNode(paramState, inheritingUID, params.uid);
+    }
     }
   },
   [types.setEnteredPlannedValue]: function(paramState, paramParams) {
