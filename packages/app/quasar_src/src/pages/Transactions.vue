@@ -65,6 +65,13 @@
                 : "NO TAG FOUND"
             }}
           </q-item-section>
+          <q-item-section>
+            <q-btn
+              @click="onDeleteTransaction(transaction.uid)"
+              color="negative"
+              icon="delete"
+            ></q-btn>
+          </q-item-section>
         </q-item>
       </q-list>
     </div>
@@ -93,7 +100,7 @@ export default {
     };
   },
   methods: {
-    ...mapActions("app", [types.createTransaction]),
+    ...mapActions("app", [types.createTransaction, types.removeTransaction]),
     onCreateTransaction() {
       let value = this.selectedTransactionVal || "";
       let tagUID = this.selectedTransactionTagUID || "";
@@ -101,7 +108,9 @@ export default {
         this.createTransaction({ value, tagUID });
       }
     },
-    onItemClick() {},
+    onDeleteTransaction(paramUID) {
+      this.removeTransaction({ uid: paramUID });
+    },
     onSelectTag(tagUID) {
       if (this.nodes[tagUID]) {
         this.selectedTransactionTagUID = tagUID;

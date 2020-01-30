@@ -125,6 +125,29 @@ export default {
     if (paramState.nodes[node.parent]) {
       recursiveRemoveNode(paramState, inheritingUID, params.uid);
     }
+  },
+  [types.removeTransaction]: function(paramState, paramParams) {
+    let { params } = paramParams;
+
+    debugger;
+
+    let transaction = paramState.transactions[params.uid];
+    if (transaction) {
+      let tag = paramState.nodes[transaction.tagUID];
+
+      // remove the actual value that was added before
+      tag.actualValue -= transaction.value;
+
+      // remove any reference of the transaction in the tag
+      // using a while tag incase it was accidentally added more than once
+      while (tag.transactions.indexOf(transaction.uid) >= 0) {
+        tag.transactions.splice(tag.transactions.indexOf(transaction.uid), 1);
+      }
+
+      // now delete the transaction from state
+      Vue.delete(paramState.transactions, transaction.uid);
+      paramState.transactions[transaction.uid] = null;
+      delete paramState.transactions[transaction.uid];
     }
   },
   [types.setEnteredPlannedValue]: function(paramState, paramParams) {

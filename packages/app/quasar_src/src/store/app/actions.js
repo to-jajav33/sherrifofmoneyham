@@ -30,6 +30,15 @@ export default {
 
     return out.return;
   },
+  [types.removeTransaction]: async function(paramContext, params) {
+    let out = {
+      params,
+      return: null
+    };
+    paramContext.commit(types.removeTransaction, out);
+
+    return out.return;
+  },
   [types.setEnteredPlannedValue]: async function(paramContext, params) {
     let out = {
       params,
