@@ -14,7 +14,8 @@ export default function() {
         remainingPlannedValue: 2000,
         actualValue: 0,
         children: [],
-        valueType: VALUE_TYPES.FIXED // fixed or percent
+        valueType: VALUE_TYPES.FIXED, // fixed or percent,
+        transactions: []
       }
     },
     transactions: {}

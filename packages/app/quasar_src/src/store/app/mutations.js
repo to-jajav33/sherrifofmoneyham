@@ -4,6 +4,35 @@ import types from "./types";
 import Vue from "vue";
 import { mapActions } from "vuex";
 
+export function recursiveChildren(paramState, inheritingUID, nodeUID) {
+  let node = paramState.nodes[nodeUID];
+  let index = paramState.nodes[node.parent].children.indexOf(nodeUID);
+  let childUID = paramState.nodes[node.parent].children[index];
+  let child = paramState.nodes[childUID];
+  let inheritingChild = paramState.nodes[inheritingUID];
+  let transactions = child.transactions;
+  paramState.nodes[node.parent].children.splice(index, 1);
+
+  for (let transactionUID of transactions) {
+    let transaction = paramState.transactions[transactionUID];
+    // transaction will pass the value up one
+    transaction.tagUID = inheritingUID;
+
+    // then if tag doesn't have transaction.. attach it.
+    if (inheritingChild.transactions.indexOf(transaction.uid) < 0) {
+      inheritingChild.transactions.push(transaction.uid);
+    }
+  }
+
+  for (let childKey in node.children) {
+    recursiveChildren(paramState, inheritingUID, childKey);
+  }
+
+  child = null;
+
+  Vue.delete(paramState.nodes, childUID);
+}
+
 export function someMutation(/* state */) {}
 
 export default {
@@ -19,7 +48,8 @@ export default {
       plannedValue: 0,
       remainingPlannedValue: 0,
       actualValue: 0,
-      tagName: ""
+      tagName: "",
+      transactions: []
     };
 
     Vue.set(paramState.nodes, newNode.uid, newNode);
@@ -72,6 +102,13 @@ export default {
 
       newTransaction.tagUID = tagUID;
       newTransaction.value = value;
+
+      // add transaction to tag to keep track of deletions
+      if (
+        paramState.nodes[tagUID].transactions.indexOf(newTransaction.uid) < 0
+      ) {
+        paramState.nodes[tagUID].transactions.push(newTransaction.uid);
+      }
     }
     paramParams.return = newTransaction;
 
@@ -80,13 +117,10 @@ export default {
   [types.removeNode]: function(paramState, paramParams) {
     let { params } = paramParams;
     let node = paramState.nodes[params.uid];
+    let inheritingUID = node.parent;
 
     if (paramState.nodes[node.parent]) {
-      let index = paramState.nodes[node.parent].children.indexOf(params.uid);
-      let childUID = paramState.nodes[node.parent].children[index];
-      paramState.nodes[node.parent].children.splice(index, 1);
-      paramState.nodes[childUID] = null;
-      Vue.delete(paramState.nodes, childUID);
+      recursiveChildren(paramState, inheritingUID, params.uid);
     }
   },
   [types.setEnteredPlannedValue]: function(paramState, paramParams) {
