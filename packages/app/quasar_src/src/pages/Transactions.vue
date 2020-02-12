@@ -29,6 +29,7 @@
                 @keypress.enter="onSelectTag(tag.uid)"
                 clickable
                 dense
+                v-show="tag.tagName"
                 v-for="tag in __tags"
                 :key="`tag_item_${tag.uid}`"
               >
@@ -87,7 +88,9 @@ export default {
   computed: {
     ...mapGetters("app", ["nodes", "transactions", "tags"]),
     __tags() {
-      return this.tags;
+      let tags = this.tags;
+      debugger;
+      return tags;
     },
     __transactions() {
       return this.transactions;

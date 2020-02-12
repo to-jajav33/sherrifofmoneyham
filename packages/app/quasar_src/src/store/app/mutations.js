@@ -3,6 +3,7 @@ import { VALUE_TYPES } from "./state";
 import types from "./types";
 import Vue from "vue";
 import { mapActions } from "vuex";
+import { version } from "../../../package.json";
 
 export function recursiveRemoveNode(paramState, inheritingUID, nodeUID) {
   let node = paramState.nodes[nodeUID];
@@ -117,6 +118,21 @@ export default {
 
     return newTransaction;
   },
+  [types.initializeStore]: function(state) {
+    // Check if the store exists
+    if (localStorage.getItem(types.localStorageLocation)) {
+      let store = JSON.parse(localStorage.getItem(types.localStorageLocation));
+
+      // Check the version stored against current. If different, don't
+      // load the cached version
+      if (store.app && store.app.version == version) {
+        Object.assign(state, store.app);
+        this.replaceState(store);
+      } else {
+        state.version = version;
+      }
+    }
+  },
   [types.removeNode]: function(paramState, paramParams) {
     let { params } = paramParams;
     let node = paramState.nodes[params.uid];
@@ -128,8 +144,6 @@ export default {
   },
   [types.removeTransaction]: function(paramState, paramParams) {
     let { params } = paramParams;
-
-    debugger;
 
     let transaction = paramState.transactions[params.uid];
     if (transaction) {

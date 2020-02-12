@@ -2,6 +2,7 @@ import Vue from "vue";
 import Vuex from "vuex";
 
 import app from "./app";
+import types from "./app/types";
 
 Vue.use(Vuex);
 
@@ -23,6 +24,14 @@ export default function(/* { ssrContext } */) {
     // enable strict mode (adds overhead!)
     // for dev mode only
     strict: process.env.DEV
+  });
+
+  // Subscribe to store updates
+  Store.subscribe((mutation, state) => {
+    if (state.app) {
+      // Store the state object as a JSON string
+      localStorage.setItem(types.localStorageLocation, JSON.stringify(state));
+    }
   });
 
   return Store;

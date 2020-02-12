@@ -179,9 +179,7 @@ export default {
   },
   props: ["myNode", "myIndex"],
   watch: {
-    actualValue() {
-      debugger;
-    },
+    actualValue() {},
     parentRemainingPlannedValue(val) {
       if (this.remainingPlannedValue !== val) {
         this.__updatePlannedValue();
