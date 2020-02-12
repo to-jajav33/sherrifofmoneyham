@@ -88,9 +88,7 @@ export default {
   computed: {
     ...mapGetters("app", ["nodes", "transactions", "tags"]),
     __tags() {
-      let tags = this.tags;
-      debugger;
-      return tags;
+      return this.tags;
     },
     __transactions() {
       return this.transactions;
